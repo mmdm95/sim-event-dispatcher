@@ -3,6 +3,7 @@
 namespace Sim\Event;
 
 use Closure;
+use Sim\Event\Interfaces\IClosureProvider;
 use Sim\Event\Interfaces\IEmitter;
 use Sim\Event\Interfaces\IEvent;
 
@@ -13,12 +14,16 @@ class Emitter implements IEmitter
      */
     protected $listenerProvider;
 
+    protected $closer_provider;
+
     /**
      * Emitter constructor.
+     * @param IClosureProvider $closure_provider
      */
-    public function __construct()
+    public function __construct(IClosureProvider $closure_provider)
     {
         $this->listenerProvider = new ListenerProvider();
+        $this->closer_provider = $closure_provider;
     }
 
     /**
@@ -33,8 +38,9 @@ class Emitter implements IEmitter
     /**
      * {@inheritdoc}
      */
-    public function removeListener(IEvent $event, \Closure $listener): IEmitter
+    public function removeListener(IEvent $event, string $closure_name): IEmitter
     {
+        $listener = $this->closer_provider->getClosure($closure_name);
         $this->listenerProvider->removeListener($event, $listener);
         return $this;
     }
