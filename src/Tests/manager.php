@@ -27,7 +27,7 @@ $closure_provider->addClosure('boot_last_evt', function (Event $event) {
 // instantiate emitter
 $emitter = new Emitter($closure_provider);
 // define events' callback
-$emitter->addListener($boot_evt, $closure_provider->getClosure('boot_last_evt'), 2)
-    ->addListener(new Event('close'), $closure_provider->getClosure('close_evt'), 3)
-    ->addListener($boot_evt, $closure_provider->getClosure('boot_first_evt'), 3)
-    ->addListener($boot_evt, $closure_provider->getClosure('boot_not_showed_evt'), 1);
+$emitter->addListener($boot_evt, 'boot_last_evt', 2)
+    ->addListener(new Event('close'), 'close_evt', 3)
+    ->addListener($boot_evt, 'boot_first_evt', 3)
+    ->addListener($boot_evt, 'boot_not_showed_evt', 1);
