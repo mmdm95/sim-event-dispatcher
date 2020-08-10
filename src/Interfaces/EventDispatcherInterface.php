@@ -10,11 +10,9 @@ interface EventDispatcherInterface
     /**
      * Provide all relevant listeners with an event to process.
      *
-     * @param IEvent $event
-     *   The object to process.
-     *
+     * @param string $event_name
      * @return IEvent
      *   The Event that was passed, now modified by listeners.
      */
-    public function dispatch(IEvent $event): IEvent;
+    public function dispatch(string $event_name): IEvent;
 }

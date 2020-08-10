@@ -8,31 +8,31 @@ use Closure;
 interface IEmitter extends EventDispatcherInterface
 {
     /**
-     * @param IEvent $event
+     * @param string $event_name
      * @param string $closure_name
      * @param int $priority
      * @return IEmitter
      */
-    public function addListener(IEvent $event, string $closure_name, int $priority = 0): IEmitter;
+    public function addListener(string $event_name, string $closure_name, int $priority = 0): IEmitter;
 
     /**
-     * @param IEvent $event
+     * @param string $event_name
      * @param string $closure_name
      * @return IEmitter
      */
-    public function removeListener(IEvent $event, string $closure_name): IEmitter;
+    public function removeListener(string $event_name, string $closure_name): IEmitter;
 
     /**
-     * @param IEvent $event
+     * @param string $event_name
      * @return IEmitter
      */
-    public function removeAllListener(IEvent $event): IEmitter;
+    public function removeAllListener(string $event_name): IEmitter;
 
     /**
-     * @param IEvent $event
+     * @param string $event_name
      * @return array
      */
-    public function getListener(IEvent $event): array;
+    public function getListener(string $event_name): array;
 
     /**
      * @return array
