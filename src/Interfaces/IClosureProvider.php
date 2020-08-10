@@ -2,10 +2,16 @@
 
 namespace Sim\Event\Interfaces;
 
+use Closure;
 
 interface IClosureProvider
 {
     /**
+     * This method add a closure to provider
+     *
+     * Note:
+     *  If any closure with $key exists, it'll be replaced
+     *
      * @param $key
      * @param $closure
      * @return IClosureProvider
@@ -20,7 +26,13 @@ interface IClosureProvider
 
     /**
      * @param $key
-     * @return \Closure
+     * @return Closure
      */
-    public function getClosure($key): \Closure;
+    public function getClosure($key): Closure;
+
+    /**
+     * @param $key
+     * @return bool
+     */
+    public function hasClosure($key): bool;
 }

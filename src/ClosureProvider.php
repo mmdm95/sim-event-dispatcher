@@ -50,4 +50,12 @@ class ClosureProvider implements IClosureProvider
     {
         return $this->closures[$key] ?? $this->noop;
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function hasClosure($key): bool
+    {
+        return isset($this->closures[$key]);
+    }
 }
