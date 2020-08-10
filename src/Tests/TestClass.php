@@ -13,22 +13,16 @@ class TestClass
      */
     protected $emitter;
 
-    /**
-     * @var ClosureProvider $closure_provider
-     */
-    protected $closure_provider;
-
-    public function __construct(IEmitter $emitter, ClosureProvider $closure_provider)
+    public function __construct(IEmitter $emitter)
     {
         $this->emitter = $emitter;
-        $this->closure_provider = $closure_provider;
     }
 
     public function boot()
     {
         echo 'I am booting' . PHP_EOL;
 //         remove first event!
-        $this->emitter->removeListener(new Event('boot'), $this->closure_provider->getClosure('boot_first_evt'));
+        $this->emitter->removeListener(new Event('boot'), 'boot_first_evt');
         echo '** First event of boot got removed.' . PHP_EOL;
         // remove all boot events!
 //        $this->emitter->removeAllListener(new Event('boot'));

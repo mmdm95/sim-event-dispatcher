@@ -6,7 +6,6 @@ use Sim\Event\Event;
 
 include_once '../../vendor/autoload.php';
 
-$emitter = new Emitter();
 $boot_evt = new Event('boot');
 // closure provider to store all closures
 $closure_provider = new ClosureProvider();
@@ -25,6 +24,8 @@ $closure_provider->addClosure('boot_last_evt', function (Event $event) {
     echo $event->getName() . ': This event never displayed!' . PHP_EOL;
     echo '----------' . PHP_EOL;
 });
+// instantiate emitter
+$emitter = new Emitter($closure_provider);
 // define events' callback
 $emitter->addListener($boot_evt, $closure_provider->getClosure('boot_last_evt'), 2)
     ->addListener(new Event('close'), $closure_provider->getClosure('close_evt'), 3)
