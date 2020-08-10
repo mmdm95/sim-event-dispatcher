@@ -14,6 +14,12 @@ interface IClosureProvider
 
     /**
      * @param $key
+     * @return IClosureProvider
+     */
+    public function removeClosure($key): IClosureProvider;
+
+    /**
+     * @param $key
      * @return \Closure
      */
     public function getClosure($key): \Closure;

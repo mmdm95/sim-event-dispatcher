@@ -37,6 +37,15 @@ class ClosureProvider implements IClosureProvider
     /**
      * {@inheritdoc}
      */
+    public function removeClosure($key): IClosureProvider
+    {
+        unset($this->closures[$key]);
+        return $this;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function getClosure($key): \Closure
     {
         return $this->closures[$key] ?? $this->noop;
