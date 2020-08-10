@@ -14,7 +14,7 @@ class Emitter implements IEmitter
      */
     protected $listenerProvider;
 
-    protected $closer_provider;
+    protected $closur_provider;
 
     /**
      * Emitter constructor.
@@ -23,14 +23,15 @@ class Emitter implements IEmitter
     public function __construct(IClosureProvider $closure_provider)
     {
         $this->listenerProvider = new ListenerProvider();
-        $this->closer_provider = $closure_provider;
+        $this->closur_provider = $closure_provider;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function addListener(IEvent $event, Closure $listener, int $priority = 0): IEmitter
+    public function addListener(IEvent $event, string $closure_name, int $priority = 0): IEmitter
     {
+        $listener = $this->closur_provider->getClosure($closure_name);
         $this->listenerProvider->addListener($event, $listener, $priority);
         return $this;
     }
@@ -40,7 +41,7 @@ class Emitter implements IEmitter
      */
     public function removeListener(IEvent $event, string $closure_name): IEmitter
     {
-        $listener = $this->closer_provider->getClosure($closure_name);
+        $listener = $this->closur_provider->getClosure($closure_name);
         $this->listenerProvider->removeListener($event, $listener);
         return $this;
     }

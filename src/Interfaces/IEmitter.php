@@ -9,11 +9,11 @@ interface IEmitter extends EventDispatcherInterface
 {
     /**
      * @param IEvent $event
-     * @param Closure $listener
+     * @param string $closure_name
      * @param int $priority
      * @return IEmitter
      */
-    public function addListener(IEvent $event, Closure $listener, int $priority = 0): IEmitter;
+    public function addListener(IEvent $event, string $closure_name, int $priority = 0): IEmitter;
 
     /**
      * @param IEvent $event
