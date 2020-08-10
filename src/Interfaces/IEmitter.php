@@ -17,10 +17,16 @@ interface IEmitter extends EventDispatcherInterface
 
     /**
      * @param IEvent $event
-     * @param Closure $listener
+     * @param \Closure $listener
      * @return IEmitter
      */
-    public function removeListener(IEvent $event, Closure $listener): IEmitter;
+    public function removeListener(IEvent $event, \Closure $listener): IEmitter;
+
+    /**
+     * @param IEvent $event
+     * @return IEmitter
+     */
+    public function removeAllListener(IEvent $event): IEmitter;
 
     /**
      * @param IEvent $event

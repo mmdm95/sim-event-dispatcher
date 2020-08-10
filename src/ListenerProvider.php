@@ -65,16 +65,22 @@ class ListenerProvider implements ListenerProviderInterface
 
     /**
      * @param IEvent $event
-     * @param Closure $listener
+     * @param Closure|null $listener
      * @return ListenerProvider
      */
-    public function removeListener(IEvent $event, Closure $listener): ListenerProvider
+    public function removeListener(IEvent $event, ?Closure $listener = null): ListenerProvider
     {
+        // create Listener object if $listener is not null
+        // null is for remove all listeners of and event
+        if(!is_null($listener)) {
+            $listener = new Listener($listener);
+        }
         if (isset($this->listeners[$event->getName()])) {
             foreach ($this->listeners[$event->getName()] as $priority => $listeners) {
                 foreach ($this->listeners[$event->getName()][$priority] as $key => $callable) {
-                    if ($callable === $listener) {
-                        // remove callable from all event in specific priority
+                    if (is_null($listener) || $callable->getClosure() === $listener->getClosure() ||
+                        $callable->getHashed() === $listener->getHashed()) {
+                        // remove callable from all events in specific priority
                         unset($this->listeners[$event->getName()][$priority][$key]);
 
                         // if event in specific priority is empty, remove it

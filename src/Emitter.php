@@ -8,18 +8,21 @@ use Sim\Event\Interfaces\IEvent;
 
 class Emitter implements IEmitter
 {
+    /**
+     * @var ListenerProvider $listenerProvider
+     */
     protected $listenerProvider;
 
+    /**
+     * Emitter constructor.
+     */
     public function __construct()
     {
         $this->listenerProvider = new ListenerProvider();
     }
 
     /**
-     * @param IEvent $event
-     * @param Closure $listener
-     * @param int $priority
-     * @return IEmitter
+     * {@inheritdoc}
      */
     public function addListener(IEvent $event, Closure $listener, int $priority = 0): IEmitter
     {
@@ -28,19 +31,25 @@ class Emitter implements IEmitter
     }
 
     /**
-     * @param IEvent $event
-     * @param Closure $listener
-     * @return IEmitter
+     * {@inheritdoc}
      */
-    public function removeListener(IEvent $event, Closure $listener): IEmitter
+    public function removeListener(IEvent $event, \Closure $listener): IEmitter
     {
         $this->listenerProvider->removeListener($event, $listener);
         return $this;
     }
 
     /**
-     * @param IEvent $event
-     * @return array
+     * {@inheritdoc}
+     */
+    public function removeAllListener(IEvent $event): IEmitter
+    {
+        $this->listenerProvider->removeListener($event, null);
+        return $this;
+    }
+
+    /**
+     * {@inheritdoc}
      */
     public function getListener(IEvent $event): array
     {
@@ -48,7 +57,7 @@ class Emitter implements IEmitter
     }
 
     /**
-     * @return array
+     * {@inheritdoc}
      */
     public function getAllListener(): array
     {
@@ -56,14 +65,7 @@ class Emitter implements IEmitter
     }
 
     /**
-     * Provide all relevant listeners with an event to process.
-     *
-     * @param IEvent $event
-     *   The object to process.
-     *
-     * @param array $arguments
-     * @return IEvent
-     *   The Event that was passed, now modified by listeners.
+     * {@inheritdoc}
      */
     public function dispatch(IEvent $event, $arguments = []): IEvent
     {
