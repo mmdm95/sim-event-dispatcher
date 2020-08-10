@@ -2,6 +2,7 @@
 
 namespace Sim\Event;
 
+use Closure;
 use Sim\Event\Interfaces\IClosureProvider;
 
 class ClosureProvider implements IClosureProvider
@@ -46,7 +47,7 @@ class ClosureProvider implements IClosureProvider
     /**
      * {@inheritdoc}
      */
-    public function getClosure($key): \Closure
+    public function getClosure($key): Closure
     {
         return $this->closures[$key] ?? $this->noop;
     }
