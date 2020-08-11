@@ -2,7 +2,6 @@
 
 namespace Sim\Event\Tests;
 
-use Sim\Event\Event;
 use Sim\Event\Interfaces\IEmitter;
 
 class TestClass
