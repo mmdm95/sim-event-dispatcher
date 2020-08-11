@@ -22,7 +22,7 @@ $closure_provider = new ClosureProvider();
 $event_provider->addEvent(new Event('boot'))
     ->addEvent(new Event('close'));
 //-----
-$closure_provider->addClosure($NameOfClosureOrKey, function () {
+$closure_provider->addClosure($nameOfClosureOrKey, function () {
     // define closure functionality
 });
 
