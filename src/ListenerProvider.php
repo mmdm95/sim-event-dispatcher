@@ -77,6 +77,9 @@ class ListenerProvider implements ListenerProviderInterface
         }
         if (isset($this->listeners[$event->getName()])) {
             foreach ($this->listeners[$event->getName()] as $priority => $listeners) {
+                /**
+                 * @var Listener $callable
+                 */
                 foreach ($this->listeners[$event->getName()][$priority] as $key => $callable) {
                     if (is_null($listener) || $callable->getClosure() === $listener->getClosure() ||
                         $callable->getHashed() === $listener->getHashed()) {
