@@ -6,6 +6,7 @@ use Sim\Event\Event;
 use Sim\Event\EventProvider;
 
 include_once '../../vendor/autoload.php';
+//include_once '../../autoloader.php';
 
 // event provider to store all events
 $event_provider = new EventProvider();
