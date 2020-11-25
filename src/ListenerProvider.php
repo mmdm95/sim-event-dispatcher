@@ -71,7 +71,7 @@ class ListenerProvider implements ListenerProviderInterface
     public function removeListener(IEvent $event, ?Closure $listener = null): ListenerProvider
     {
         // create Listener object if $listener is not null
-        // null is for remove all listeners of and event
+        // null is for remove all listeners of an event
         if(!is_null($listener)) {
             $listener = new Listener($listener);
         }
