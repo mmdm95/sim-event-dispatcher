@@ -97,7 +97,7 @@ class Emitter implements IEmitter
     /**
      * {@inheritdoc}
      */
-    public function dispatch(string $event_name, $arguments = []): IEvent
+    public function dispatch(string $event_name, $arguments = []): ?IEvent
     {
         $event = null;
         if ($this->event_provider->hasEvent($event_name)) {
