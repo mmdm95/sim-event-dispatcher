@@ -23,7 +23,7 @@ class TestClass
         $this->emitter->removeListener('boot', 'boot_first_evt');
         echo '** First event of boot got removed.' . PHP_EOL;
         // remove all boot events!
-//        $this->emitter->removeAllListener(new Event('boot'));
+//        $this->emitter->removeAllListeners('boot');
         // now dispatch al boot closures
         $boot_evt = $this->emitter->dispatch('boot');
         // last return value

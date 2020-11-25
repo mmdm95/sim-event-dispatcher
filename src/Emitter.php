@@ -65,7 +65,7 @@ class Emitter implements IEmitter
     /**
      * {@inheritdoc}
      */
-    public function removeAllListener(string $event_name): IEmitter
+    public function removeAllListeners(string $event_name): IEmitter
     {
         if ($this->event_provider->hasEvent($event_name)) {
             $event = $this->event_provider->getEvent($event_name);
@@ -89,7 +89,7 @@ class Emitter implements IEmitter
     /**
      * {@inheritdoc}
      */
-    public function getAllListener(): array
+    public function getAllListeners(): array
     {
         return $this->listenerProvider->getListeners();
     }

@@ -26,7 +26,7 @@ interface IEmitter extends EventDispatcherInterface
      * @param string $event_name
      * @return IEmitter
      */
-    public function removeAllListener(string $event_name): IEmitter;
+    public function removeAllListeners(string $event_name): IEmitter;
 
     /**
      * @param string $event_name
@@ -37,5 +37,5 @@ interface IEmitter extends EventDispatcherInterface
     /**
      * @return array
      */
-    public function getAllListener(): array;
+    public function getAllListeners(): array;
 }

@@ -34,7 +34,7 @@ $closure_provider->addClosure($nameOfClosureOrKey, function () {
     // define closure functionality
 });
 
-// to instance an emitter object,
+// to instanciate an emitter object,
 // use event provider and closure provider,
 // from above
 $emitter = new Emitter($event_provider, $closure_provider);
@@ -124,7 +124,7 @@ This method checks to see if a closure is exist in provider
 
 ```php
 // check if a closure exists
-$closure_provider->hasEvent('cartOnBoot');
+$closure_provider->hasClosure('cartOnBoot');
 ```
 
 #### Emitter
@@ -152,13 +152,13 @@ This method removes a listener from emitter
 $emitter->removeListener('cartOnBoot', 'cart_boot');
 ```
 
-- removeAllListener(string $event_name): IEmitter
+- removeAllListeners(string $event_name): IEmitter
 
 This method remove all listeners of an event from emitter
 
 ```php
 // to remove a listener
-$emitter->removeAllListener('cartOnBoot');
+$emitter->removeAllListeners('cartOnBoot');
 ```
 
 - getListener(string $event_name): array
@@ -170,13 +170,13 @@ This method gets all listeners of an event from emitter
 $emitter->getListener('cartOnBoot');
 ```
 
-- getAllListener(): array
+- getAllListeners(): array
 
 This method gets all listeners from emitter
 
 ```php
 // to get all listeners
-$emitter->getAllListener();
+$emitter->getAllListeners();
 ```
 
 # License
