@@ -2,37 +2,37 @@
 
 namespace Sim\Event\Interfaces;
 
-
 use Closure;
+use Sim\Event\Event;
 
 interface IEmitter extends EventDispatcherInterface
 {
     /**
-     * @param string $event_name
-     * @param string $closure_name
+     * @param string|Event $event
+     * @param string|Closure $closure
      * @param int $priority
      * @return IEmitter
      */
-    public function addListener(string $event_name, string $closure_name, int $priority = 0): IEmitter;
+    public function addListener($event, $closure, int $priority = 0): IEmitter;
 
     /**
-     * @param string $event_name
-     * @param string $closure_name
+     * @param string|Event $event
+     * @param string|Closure $closure
      * @return IEmitter
      */
-    public function removeListener(string $event_name, string $closure_name): IEmitter;
+    public function removeListener($event, $closure): IEmitter;
 
     /**
-     * @param string $event_name
+     * @param string|Event $event
      * @return IEmitter
      */
-    public function removeAllListeners(string $event_name): IEmitter;
+    public function removeAllListeners($event): IEmitter;
 
     /**
-     * @param string $event_name
+     * @param string|Event $event
      * @return array
      */
-    public function getListener(string $event_name): array;
+    public function getListener($event): array;
 
     /**
      * @return array

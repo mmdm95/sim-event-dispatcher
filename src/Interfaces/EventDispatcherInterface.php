@@ -2,6 +2,8 @@
 
 namespace Sim\Event\Interfaces;
 
+use Sim\Event\Event;
+
 /**
  * Defines a dispatcher for events.
  */
@@ -10,9 +12,9 @@ interface EventDispatcherInterface
     /**
      * Provide all relevant listeners with an event to process.
      *
-     * @param string $event_name
+     * @param string|Event $event
      * @return IEvent|null
      *   The Event that was passed, now modified by listeners.
      */
-    public function dispatch(string $event_name): ?IEvent;
+    public function dispatch($event): ?IEvent;
 }

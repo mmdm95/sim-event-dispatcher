@@ -2,6 +2,7 @@
 
 namespace Sim\Event;
 
+use Closure;
 use Sim\Event\Interfaces\IClosureProvider;
 use Sim\Event\Interfaces\IEmitter;
 use Sim\Event\Interfaces\IEvent;
@@ -10,28 +11,28 @@ use Sim\Event\Interfaces\IEventProvider;
 class Emitter implements IEmitter
 {
     /**
-     * @var ListenerProvider $listenerProvider
+     * @var ListenerProvider $listener_provider
      */
-    protected $listenerProvider;
+    protected $listener_provider;
 
     /**
-     * @var IEventProvider $event_provider
+     * @var IEventProvider|null $event_provider
      */
     protected $event_provider;
 
     /**
-     * @var IClosureProvider $closure_provider
+     * @var IClosureProvider|null $closure_provider
      */
     protected $closure_provider;
 
     /**
      * Emitter constructor.
-     * @param IEventProvider $event_provider
-     * @param IClosureProvider $closure_provider
+     * @param IEventProvider|null $event_provider
+     * @param IClosureProvider|null $closure_provider
      */
-    public function __construct(IEventProvider &$event_provider, IClosureProvider &$closure_provider)
+    public function __construct(?IEventProvider &$event_provider = null, ?IClosureProvider &$closure_provider = null)
     {
-        $this->listenerProvider = new ListenerProvider();
+        $this->listener_provider = new ListenerProvider();
         $this->closure_provider = $closure_provider;
         $this->event_provider = $event_provider;
     }
@@ -39,12 +40,26 @@ class Emitter implements IEmitter
     /**
      * {@inheritdoc}
      */
-    public function addListener(string $event_name, string $closure_name, int $priority = 0): IEmitter
+    public function addListener($event, $closure, int $priority = 0): IEmitter
     {
-        if ($this->event_provider->hasEvent($event_name)) {
-            $event = $this->event_provider->getEvent($event_name);
-            $listener = $this->closure_provider->getClosure($closure_name);
-            $this->listenerProvider->addListener($event, $listener, $priority);
+        $evt = $this->getEvent($event);
+        $listener = $this->getClosure($closure);
+        if (null !== $evt && null !== $listener) {
+            $this->listener_provider->addListener($evt, $listener, $priority);
+        }
+
+        return $this;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function removeListener($event, $closure): IEmitter
+    {
+        $evt = $this->getEvent($event);
+        $listener = $this->getClosure($closure);
+        if (null !== $evt && null !== $listener) {
+            $this->listener_provider->removeListener($evt, $listener);
         }
         return $this;
     }
@@ -52,12 +67,11 @@ class Emitter implements IEmitter
     /**
      * {@inheritdoc}
      */
-    public function removeListener(string $event_name, string $closure_name): IEmitter
+    public function removeAllListeners($event): IEmitter
     {
-        if ($this->event_provider->hasEvent($event_name)) {
-            $event = $this->event_provider->getEvent($event_name);
-            $listener = $this->closure_provider->getClosure($closure_name);
-            $this->listenerProvider->removeListener($event, $listener);
+        $evt = $this->getEvent($event);
+        if (null !== $evt) {
+            $this->listener_provider->removeListener($evt, null);
         }
         return $this;
     }
@@ -65,23 +79,11 @@ class Emitter implements IEmitter
     /**
      * {@inheritdoc}
      */
-    public function removeAllListeners(string $event_name): IEmitter
+    public function getListener($event): array
     {
-        if ($this->event_provider->hasEvent($event_name)) {
-            $event = $this->event_provider->getEvent($event_name);
-            $this->listenerProvider->removeListener($event, null);
-        }
-        return $this;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getListener(string $event_name): array
-    {
-        if ($this->event_provider->hasEvent($event_name)) {
-            $event = $this->event_provider->getEvent($event_name);
-            return $this->listenerProvider->getListenersForEvent($event);
+        $evt = $this->getEvent($event);
+        if (null !== $evt) {
+            return $this->listener_provider->getListenersForEvent($evt);
         }
         return [];
     }
@@ -91,23 +93,56 @@ class Emitter implements IEmitter
      */
     public function getAllListeners(): array
     {
-        return $this->listenerProvider->getListeners();
+        return $this->listener_provider->getListeners();
     }
 
     /**
      * {@inheritdoc}
      */
-    public function dispatch(string $event_name, $arguments = []): ?IEvent
+    public function dispatch($event, $arguments = []): ?IEvent
     {
-        $event = null;
-        if ($this->event_provider->hasEvent($event_name)) {
-            $event = $this->event_provider->getEvent($event_name);
-            $listeners = $this->getListener($event_name);
+        $evt = $this->getEvent($event);
+        if (null !== $evt) {
+            $listeners = $this->getListener($event);
             foreach ($listeners as $priority => $callable) {
-                if ($event->isPropagationStopped()) break;
-                $callable->call($arguments)($event);
+                if ($evt->isPropagationStopped()) break;
+                $callable->call($arguments)($evt);
             }
         }
-        return $event;
+        return $evt;
+    }
+
+    /**
+     * @param string|Event $event
+     * @return IEvent|null
+     */
+    protected function getEvent($event): ?IEvent
+    {
+        $evt = null;
+        if ($event instanceof IEvent) {
+            $evt = $event;
+        } elseif (is_string($event) && null !== $this->event_provider) {
+            if ($this->event_provider->hasEvent($event)) {
+                $evt = $this->event_provider->getEvent($event);
+            }
+        }
+        return $evt;
+    }
+
+    /**
+     * @param string|Closure $closure
+     * @return Closure|null
+     */
+    protected function getClosure($closure): ?Closure
+    {
+        $cl = null;
+        if ($closure instanceof Closure) {
+            $cl = $closure;
+        } elseif (is_string($closure) && null !== $this->closure_provider) {
+            if ($this->closure_provider->hasClosure($closure)) {
+                $cl = $this->closure_provider->getClosure($closure);
+            }
+        }
+        return $cl;
     }
 }

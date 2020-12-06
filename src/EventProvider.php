@@ -33,7 +33,7 @@ class EventProvider implements IEventProvider
     /**
      * {@inheritdoc}
      */
-    public function getEvent(string $event_name): IEvent
+    public function getEvent(string $event_name): ?IEvent
     {
         return $this->events[$event_name] ?? null;
     }

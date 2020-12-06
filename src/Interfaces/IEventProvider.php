@@ -20,7 +20,7 @@ interface IEventProvider
      * @param string $event_name
      * @return IEvent|null
      */
-    public function getEvent(string $event_name): IEvent;
+    public function getEvent(string $event_name): ?IEvent;
 
     /**
      * @param string $event_name
