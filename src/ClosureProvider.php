@@ -13,7 +13,7 @@ class ClosureProvider implements IClosureProvider
     protected $closures = [];
 
     /**
-     * @var \Closure
+     * @var Closure
      */
     protected $noop;
 
@@ -29,7 +29,7 @@ class ClosureProvider implements IClosureProvider
     /**
      * {@inheritdoc}
      */
-    public function addClosure($key, $closure): IClosureProvider
+    public function addClosure(string $key, Closure $closure): IClosureProvider
     {
         $this->closures[$key] = $closure;
         return $this;
@@ -38,7 +38,7 @@ class ClosureProvider implements IClosureProvider
     /**
      * {@inheritdoc}
      */
-    public function removeClosure($key): IClosureProvider
+    public function removeClosure(string $key): IClosureProvider
     {
         unset($this->closures[$key]);
         return $this;
@@ -47,7 +47,7 @@ class ClosureProvider implements IClosureProvider
     /**
      * {@inheritdoc}
      */
-    public function getClosure($key): Closure
+    public function getClosure(string $key): Closure
     {
         return $this->closures[$key] ?? $this->noop;
     }
@@ -55,7 +55,7 @@ class ClosureProvider implements IClosureProvider
     /**
      * {@inheritdoc}
      */
-    public function hasClosure($key): bool
+    public function hasClosure(string $key): bool
     {
         return isset($this->closures[$key]);
     }

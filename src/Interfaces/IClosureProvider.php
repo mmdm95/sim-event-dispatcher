@@ -12,27 +12,27 @@ interface IClosureProvider
      * Note:
      *  If any closure with $key exists, it'll be replaced
      *
-     * @param $key
+     * @param string $key
      * @param $closure
      * @return IClosureProvider
      */
-    public function addClosure($key, $closure): IClosureProvider;
+    public function addClosure(string $key, Closure $closure): IClosureProvider;
 
     /**
-     * @param $key
+     * @param string $key
      * @return IClosureProvider
      */
-    public function removeClosure($key): IClosureProvider;
+    public function removeClosure(string $key): IClosureProvider;
 
     /**
-     * @param $key
+     * @param string $key
      * @return Closure
      */
-    public function getClosure($key): Closure;
+    public function getClosure(string $key): Closure;
 
     /**
-     * @param $key
+     * @param string $key
      * @return bool
      */
-    public function hasClosure($key): bool;
+    public function hasClosure(string $key): bool;
 }
