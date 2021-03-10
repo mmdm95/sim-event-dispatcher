@@ -189,6 +189,9 @@ extra parameter *$wild_card* that is a regex
 ```php
 // to get all listeners
 $emitter->getAllListeners();
+
+// to get all events with [cart:boot] and [cart:orders]
+$emitter->getAllListeners('cart:(boot|orders)');
 ```
 
 # License
