@@ -156,9 +156,18 @@ $emitter->removeListener('cartOnBoot', 'cart_boot');
 
 This method remove all listeners of an event from emitter
 
+**Note:** Now you can pass wild cards *(regex)* as event too!
+
 ```php
 // to remove a listener
 $emitter->removeAllListeners('cartOnBoot');
+
+// to remove a listener with wild card
+//
+// code below will find all events like
+// [cart:boot], [cartOnBoot], etc.
+// and remove them all
+$emitter->removeAllListeners('cart:?.*');
 ```
 
 - getListener(string $event_name): array
@@ -170,9 +179,12 @@ This method gets all listeners of an event from emitter
 $emitter->getListener('cartOnBoot');
 ```
 
-- getAllListeners(): array
+- getAllListeners($wild_card = null): array
 
 This method gets all listeners from emitter
+
+**Note:** You can filter listeners with their events through an 
+extra parameter *$wild_card* that is a regex
 
 ```php
 // to get all listeners

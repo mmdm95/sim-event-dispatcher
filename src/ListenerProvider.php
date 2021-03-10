@@ -27,13 +27,18 @@ class ListenerProvider implements ListenerProviderInterface
     }
 
     /**
+     * @param null $wild_card
      * @return array
      */
-    public function getListeners(): array
+    public function getListeners($wild_card = null): array
     {
         $listeners = [];
-        foreach ($this->listeners as $event => $priority) {
-            $listeners[$event] = $this->_sortListeners($priority);
+        $isWildCardString = is_string($wild_card);
+        foreach ($this->listeners as $event => $listenerArr) {
+            if ($isWildCardString && !(bool)preg_match('#' . (string)$wild_card . '#', $event)) {
+                continue;
+            }
+            $listeners[$event] = $this->_sortListeners($listenerArr);
         }
         return $listeners;
     }
@@ -72,7 +77,7 @@ class ListenerProvider implements ListenerProviderInterface
     {
         // create Listener object if $listener is not null
         // null is for remove all listeners of an event
-        if(!is_null($listener)) {
+        if (!is_null($listener)) {
             $listener = new Listener($listener);
         }
         if (isset($this->listeners[$event->getName()])) {

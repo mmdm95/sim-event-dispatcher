@@ -59,6 +59,11 @@ class Emitter implements IEmitter
         $evt = $this->getEvent($event);
         $listener = $this->getClosure($closure);
         if (null !== $evt && null !== $listener) {
+            if (is_array($evt)) {
+                foreach ($evt as $e) {
+                    $this->listener_provider->removeListener($e, $listener);
+                }
+            }
             $this->listener_provider->removeListener($evt, $listener);
         }
         return $this;
@@ -71,7 +76,13 @@ class Emitter implements IEmitter
     {
         $evt = $this->getEvent($event);
         if (null !== $evt) {
-            $this->listener_provider->removeListener($evt, null);
+            if (is_array($evt)) {
+                foreach ($evt as $e) {
+                    $this->listener_provider->removeListener($e, null);
+                }
+            } else {
+                $this->listener_provider->removeListener($evt, null);
+            }
         }
         return $this;
     }
@@ -82,18 +93,25 @@ class Emitter implements IEmitter
     public function getListener($event): array
     {
         $evt = $this->getEvent($event);
+        $events = [];
         if (null !== $evt) {
-            return $this->listener_provider->getListenersForEvent($evt);
+            if (is_array($evt)) {
+                foreach ($evt as $e) {
+                    $events[] = $this->listener_provider->getListenersForEvent($e);
+                }
+                return $events;
+            }
+            $events = $this->listener_provider->getListenersForEvent($evt);
         }
-        return [];
+        return $events;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getAllListeners(): array
+    public function getAllListeners($wild_card = null): array
     {
-        return $this->listener_provider->getListeners();
+        return $this->listener_provider->getListeners($wild_card);
     }
 
     /**
@@ -114,9 +132,9 @@ class Emitter implements IEmitter
 
     /**
      * @param string|Event $event
-     * @return IEvent|null
+     * @return IEvent|array{IEvent}|null
      */
-    protected function getEvent($event): ?IEvent
+    protected function getEvent($event)
     {
         $evt = null;
         if ($event instanceof IEvent) {
@@ -124,7 +142,11 @@ class Emitter implements IEmitter
         } elseif (is_string($event) && null !== $this->event_provider) {
             if ($this->event_provider->hasEvent($event)) {
                 $evt = $this->event_provider->getEvent($event);
+            } else {
+                $evt = $this->getEventsFromWildCard($event);
             }
+        } elseif (is_string($event)) {
+            $evt = $this->getEventsFromWildCard($event);
         }
         return $evt;
     }
@@ -144,5 +166,20 @@ class Emitter implements IEmitter
             }
         }
         return $cl;
+    }
+
+    /**
+     * @param $event
+     * @return array
+     */
+    private function getEventsFromWildCard($event): array
+    {
+        $events = $this->getAllListeners($event);
+        $keys = array_keys($events);
+        $events = [];
+        foreach ($keys as $evt) {
+            $events[] = $this->getEvent($evt);
+        }
+        return $events;
     }
 }
