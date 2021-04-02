@@ -44,7 +44,7 @@ class Emitter implements IEmitter
     {
         $evt = $this->getEvent($event);
         $listener = $this->getClosure($closure);
-        if (null !== $evt && null !== $listener) {
+        if ($evt instanceof IEvent && null !== $listener) {
             $this->listener_provider->addListener($evt, $listener, $priority);
         }
 
@@ -92,15 +92,9 @@ class Emitter implements IEmitter
      */
     public function getListener($event): array
     {
-        $evt = $this->getEvent($event);
+        $evt = $this->getEvent($event, false);
         $events = [];
         if (null !== $evt) {
-            if (is_array($evt)) {
-                foreach ($evt as $e) {
-                    $events[] = $this->listener_provider->getListenersForEvent($e);
-                }
-                return $events;
-            }
             $events = $this->listener_provider->getListenersForEvent($evt);
         }
         return $events;
@@ -117,14 +111,24 @@ class Emitter implements IEmitter
     /**
      * {@inheritdoc}
      */
-    public function dispatch($event, $arguments = []): ?IEvent
+    public function dispatch($event, $arguments = [])
     {
         $evt = $this->getEvent($event);
         if (null !== $evt) {
-            $listeners = $this->getListener($event);
-            foreach ($listeners as $priority => $callable) {
-                if ($evt->isPropagationStopped()) break;
-                $callable->call($arguments)($evt);
+            if (is_array($evt)) {
+                foreach ($evt as $e) {
+                    $listeners = $this->getListener($e);
+                    foreach ($listeners as $priority => $callable) {
+                        if ($e->isPropagationStopped()) break;
+                        $callable->call($arguments)($e);
+                    }
+                }
+            } else {
+                $listeners = $this->getListener($evt);
+                foreach ($listeners as $priority => $callable) {
+                    if ($evt->isPropagationStopped()) break;
+                    $callable->call($arguments)($evt);
+                }
             }
         }
         return $evt;
@@ -132,17 +136,18 @@ class Emitter implements IEmitter
 
     /**
      * @param string|Event $event
+     * @param bool $get_wild_cards_too
      * @return IEvent|array{IEvent}|null
      */
-    protected function getEvent($event)
+    protected function getEvent($event, bool $get_wild_cards_too = true)
     {
         $evt = null;
         if ($event instanceof IEvent) {
             $evt = $event;
         } elseif (is_string($event) && null !== $this->event_provider) {
             if ($this->event_provider->hasEvent($event)) {
-                $evt = $this->event_provider->getEvent($event);
-            } else {
+                $evt = $this->event_provider->getEvent($event, false);
+            } elseif ($get_wild_cards_too) {
                 $evt = $this->getEventsFromWildCard($event);
             }
         } elseif (is_string($event)) {
@@ -178,7 +183,7 @@ class Emitter implements IEmitter
         $keys = array_keys($events);
         $events = [];
         foreach ($keys as $evt) {
-            $events[] = $this->getEvent($evt);
+            $events[] = $this->getEvent($evt, false);
         }
         return $events;
     }

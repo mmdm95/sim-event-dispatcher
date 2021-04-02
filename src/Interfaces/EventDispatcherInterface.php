@@ -13,8 +13,8 @@ interface EventDispatcherInterface
      * Provide all relevant listeners with an event to process.
      *
      * @param string|Event $event
-     * @return IEvent|null
+     * @return array|IEvent|null
      *   The Event that was passed, now modified by listeners.
      */
-    public function dispatch($event): ?IEvent;
+    public function dispatch($event);
 }
