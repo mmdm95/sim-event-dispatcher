@@ -146,7 +146,7 @@ class Emitter implements IEmitter
             $evt = $event;
         } elseif (is_string($event) && null !== $this->event_provider) {
             if ($this->event_provider->hasEvent($event)) {
-                $evt = $this->event_provider->getEvent($event, false);
+                $evt = $this->event_provider->getEvent($event);
             } elseif ($get_wild_cards_too) {
                 $evt = $this->getEventsFromWildCard($event);
             }
